@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -17,15 +17,25 @@ import {
 import { Search as SearchIcon } from '@mui/icons-material';
 import { scrifallService } from '../services/scryfull_service';
 import { Card as ScryfallCard } from '../types/cards';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
+import {
+  setSearchQuery,
+  setSearchResults,
+  setLoading,
+  setError,
+} from '../store/searchSlice';
 
 export const CardSearchPage: React.FC = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<ScryfallCard[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalCards, setTotalCards] = useState(0);
+  const dispatch = useAppDispatch();
+  const {
+    query: searchQuery,
+    results: searchResults,
+    currentPage,
+    totalCards,
+    loading,
+    error,
+  } = useAppSelector((state) => state.search);
 
   const cardsPerPage = 175; // Scryfall's default page size
 
@@ -50,26 +60,32 @@ export const CardSearchPage: React.FC = () => {
 
   const handleSearch = useCallback(async (query: string, page: number = 1) => {
     if (query.trim().length < 3) {
-      setError('Search query must be at least 3 characters long');
+      dispatch(setError('Search query must be at least 3 characters long'));
       return;
     }
 
-    setLoading(true);
-    setError(null);
+    dispatch(setLoading(true));
+    dispatch(setError(null));
 
     try {
       const response = await scrifallService.searchCards({ q: query.trim(), page });
-      setSearchResults(response.data);
-      setTotalCards(response.totalCards || 0);
-      setCurrentPage(page);
+      dispatch(setSearchResults({
+        results: response.data,
+        totalCards: response.totalCards || 0,
+        currentPage: page,
+      }));
+      dispatch(setSearchQuery(query));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred');
-      setSearchResults([]);
-      setTotalCards(0);
+      dispatch(setError(err instanceof Error ? err.message : 'An unknown error occurred'));
+      dispatch(setSearchResults({
+        results: [],
+        totalCards: 0,
+        currentPage: 1,
+      }));
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
-  }, []);
+  }, [dispatch]);
 
   const handleSearchButtonClick = () => {
     handleSearch(searchQuery, 1);
@@ -100,7 +116,7 @@ export const CardSearchPage: React.FC = () => {
             label="Search for Magic cards..."
             variant="outlined"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => dispatch(setSearchQuery(e.target.value))}
             onKeyPress={handleKeyPress}
             error={!!error && error.includes('3 characters')}
             helperText={error && error.includes('3 characters') ? error : 'Enter at least 3 characters to search'}

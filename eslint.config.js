@@ -47,6 +47,7 @@ export default [
         beforeAll: 'readonly',
         afterAll: 'readonly',
         vi: 'readonly',
+        jest: 'readonly',
       },
     },
   },

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -17,6 +18,8 @@ import {
   Menu as MenuIcon,
   Search as SearchIcon,
 } from '@mui/icons-material';
+import { useAppDispatch } from '../store/hooks';
+import { clearSearch } from '../store/searchSlice';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -34,13 +37,15 @@ const navigationItems: NavigationItem[] = [
   {
     text: 'Card Search',
     icon: <SearchIcon />,
-    path: '/search',
+    path: '/',
   },
 ];
 
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [selectedPath, setSelectedPath] = useState('/search');
+  const [selectedPath, setSelectedPath] = useState('/');
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -49,6 +54,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const handleNavigationClick = (path: string) => {
     setSelectedPath(path);
     setMobileOpen(false);
+    // Clear search state when navigating from drawer
+    dispatch(clearSearch());
+    navigate(path);
   };
 
   const drawer = (

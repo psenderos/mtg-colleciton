@@ -59,7 +59,7 @@ export const CardDetailPage: React.FC = () => {
   }, [id]);
 
   const handleBackClick = () => {
-    navigate(-1);
+    navigate('/');
   };
 
   const getCardImage = (card: ScryfallCard) => {
