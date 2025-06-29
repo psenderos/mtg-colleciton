@@ -1,17 +1,18 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { vi } from 'vitest';
 import App from './App';
 
 // Mock the API service to avoid axios import issues
-jest.mock('./services/api', () => ({
+vi.mock('./services/api', () => ({
   apiService: {
-    searchCards: jest.fn(),
-    testConnection: jest.fn(),
+    searchCards: vi.fn(),
+    testConnection: vi.fn(),
   },
   ScryfallCard: {},
   ScryfallSearchResponse: {},
-  ApiService: jest.fn(),
+  ApiService: vi.fn(),
 }));
 
 // Create the same theme as used in App
