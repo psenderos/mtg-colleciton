@@ -15,7 +15,8 @@ import {
   CardActionArea,
 } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
-import { apiService, ScryfallCard } from '../services/api';
+import { scrifallService } from '../services/scryfull_service';
+import { Card as ScryfallCard } from '../types/cards';
 
 export const CardSearchPage: React.FC = () => {
   const navigate = useNavigate();
@@ -57,9 +58,9 @@ export const CardSearchPage: React.FC = () => {
     setError(null);
 
     try {
-      const response = await apiService.searchCards(query.trim(), page);
+      const response = await scrifallService.searchCards({ q: query.trim(), page });
       setSearchResults(response.data);
-      setTotalCards(response.total_cards);
+      setTotalCards(response.totalCards || 0);
       setCurrentPage(page);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
