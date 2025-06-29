@@ -14,7 +14,8 @@ import {
   Paper,
 } from '@mui/material';
 import { ArrowBack as ArrowBackIcon } from '@mui/icons-material';
-import { apiService, ScryfallCard } from '../services/api';
+import { scrifallService } from '../services/scryfull_service';
+import { Card as ScryfallCard } from '../types/cards';
 
 export const CardDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -37,12 +38,16 @@ export const CardDetailPage: React.FC = () => {
         setError(null);
 
         // Fetch card details
-        const cardDetails = await apiService.getCardByMtgoId(parseInt(id));
+        const cardDetails = await scrifallService.getCardByMtgoId(parseInt(id));
         setCard(cardDetails);
 
         // Fetch all versions of this card
-        const versions = await apiService.getCardPrints(cardDetails.name);
-        setCardVersions(versions);
+        const versions = await scrifallService.searchCards({ 
+          q: `!"${cardDetails.name}"`, 
+          unique: 'prints', 
+          order: 'released' 
+        });
+        setCardVersions(versions.data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load card details');
       } finally {
