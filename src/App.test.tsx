@@ -1,18 +1,19 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { configureStore } from '@reduxjs/toolkit';
 import { vi } from 'vitest';
 import { CardSearchPage } from './pages/CardSearchPage';
+import searchReducer from './store/searchSlice';
 
 // Mock the API service to avoid axios import issues
-vi.mock('./services/api', () => ({
-  apiService: {
+vi.mock('./services/scryfull_service', () => ({
+  scrifallService: {
     searchCards: vi.fn(),
-    testConnection: vi.fn(),
+    getCardByMtgoId: vi.fn(),
   },
-  ScryfallCard: {},
-  ScryfallSearchResponse: {},
-  ApiService: vi.fn(),
 }));
 
 // Create the same theme as used in App
@@ -27,11 +28,26 @@ const theme = createTheme({
   },
 });
 
+// Create a test store
+const createTestStore = () => {
+  return configureStore({
+    reducer: {
+      search: searchReducer,
+    },
+  });
+};
+
 test('renders MTG Collection Manager', () => {
+  const store = createTestStore();
+  
   render(
-    <ThemeProvider theme={theme}>
-      <CardSearchPage />
-    </ThemeProvider>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <CardSearchPage />
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
   );
   
   // Test that the main components are rendered
