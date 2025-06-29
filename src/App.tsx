@@ -1,8 +1,10 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Layout } from './components/Layout';
 import { CardSearchPage } from './pages/CardSearchPage';
+import { CardDetailPage } from './pages/CardDetailPage';
 
 // Create a custom theme
 const theme = createTheme({
@@ -20,9 +22,14 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Layout>
-        <CardSearchPage />
-      </Layout>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<CardSearchPage />} />
+            <Route path="/cards/:id" element={<CardDetailPage />} />
+          </Routes>
+        </Layout>
+      </Router>
     </ThemeProvider>
   );
 }

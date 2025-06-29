@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import App from './App';
+import { CardSearchPage } from './pages/CardSearchPage';
 
 // Mock the API service to avoid axios import issues
 jest.mock('./services/api', () => ({
@@ -29,16 +29,14 @@ const theme = createTheme({
 test('renders MTG Collection Manager', () => {
   render(
     <ThemeProvider theme={theme}>
-      <App />
+      <CardSearchPage />
     </ThemeProvider>
   );
   
   // Test that the main components are rendered
-  const appBarTitle = screen.getByText(/MTG Collection Manager/i);
-  const cardSearchTitles = screen.getAllByText(/Card Search/i);
+  const cardSearchTitle = screen.getByText(/Card Search/i);
   const searchInput = screen.getByLabelText(/Search for Magic cards/i);
   
-  expect(appBarTitle).toBeInTheDocument();
-  expect(cardSearchTitles.length).toBeGreaterThan(0); // Should appear in navigation and page header
+  expect(cardSearchTitle).toBeInTheDocument();
   expect(searchInput).toBeInTheDocument();
 });

@@ -13,11 +13,27 @@ export interface ScryfallCard {
   power?: string;
   toughness?: string;
   set_name: string;
+  mtgo_id?: number;
+  flavor_text?: string;
+  prices?: {
+    usd?: string;
+    usd_foil?: string;
+    eur?: string;
+    eur_foil?: string;
+    tix?: string;
+  };
   image_uris?: {
     small: string;
     normal: string;
     large: string;
   };
+  card_faces?: Array<{
+    image_uris?: {
+      small: string;
+      normal: string;
+      large: string;
+    };
+  }>;
 }
 
 export interface ScryfallSearchResponse {
@@ -66,6 +82,49 @@ export class ApiService {
         throw new Error(`API Error: ${error.response?.data?.details || error.message}`);
       }
       throw new Error('Unknown error occurred while searching cards');
+    }
+  }
+
+  /**
+   * Get card details by MTGO ID
+   * @param mtgoId MTGO ID of the card
+   * @returns Promise with card details
+   */
+  async getCardByMtgoId(mtgoId: number): Promise<ScryfallCard> {
+    try {
+      const response = await this.axiosInstance.get(`/cards/mtgo/${mtgoId}`);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        throw new Error(`API Error: ${error.response?.data?.details || error.message}`);
+      }
+      throw new Error('Unknown error occurred while fetching card details');
+    }
+  }
+
+  /**
+   * Get all prints of a card by name
+   * @param cardName Name of the card
+   * @returns Promise with all prints/versions
+   */
+  async getCardPrints(cardName: string): Promise<ScryfallCard[]> {
+    try {
+      const response = await this.axiosInstance.get('/cards/search', {
+        params: {
+          q: `!"${cardName}"`,
+          unique: 'prints',
+          order: 'released',
+        },
+      });
+      return response.data.data || [];
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 404) {
+          return [];
+        }
+        throw new Error(`API Error: ${error.response?.data?.details || error.message}`);
+      }
+      throw new Error('Unknown error occurred while fetching card prints');
     }
   }
 
