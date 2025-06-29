@@ -1,20 +1,24 @@
 import React, { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   TextField,
   Button,
   Typography,
   Card,
+  CardMedia,
   CardContent,
   CircularProgress,
   Alert,
   Pagination,
   Paper,
+  CardActionArea,
 } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { apiService, ScryfallCard } from '../services/api';
 
 export const CardSearchPage: React.FC = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<ScryfallCard[]>([]);
   const [loading, setLoading] = useState(false);
@@ -23,6 +27,25 @@ export const CardSearchPage: React.FC = () => {
   const [totalCards, setTotalCards] = useState(0);
 
   const cardsPerPage = 175; // Scryfall's default page size
+
+  const getCardImage = (card: ScryfallCard) => {
+    if (card.image_uris?.normal) {
+      return card.image_uris.normal;
+    }
+    if (card.card_faces?.[0]?.image_uris?.normal) {
+      return card.card_faces[0].image_uris.normal;
+    }
+    return null;
+  };
+
+  const handleCardClick = (card: ScryfallCard) => {
+    if (card.mtgo_id) {
+      navigate(`/cards/${card.mtgo_id}`);
+    } else {
+      // Fallback: if no mtgo_id, show alert
+      alert('This card is not available on MTGO');
+    }
+  };
 
   const handleSearch = useCallback(async (query: string, page: number = 1) => {
     if (query.trim().length < 3) {
@@ -115,48 +138,91 @@ export const CardSearchPage: React.FC = () => {
           <Box sx={{ 
             display: 'grid', 
             gridTemplateColumns: { 
-              xs: '1fr',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(3, 1fr)'
+              xs: 'repeat(2, 1fr)',
+              sm: 'repeat(3, 1fr)',
+              md: 'repeat(4, 1fr)',
+              lg: 'repeat(5, 1fr)'
             },
             gap: 2,
             mb: 3 
           }}>
-            {searchResults.map((card) => (
-              <Card key={card.id} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" component="h2" gutterBottom>
-                    {card.name}
-                  </Typography>
-                  
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    {card.type_line}
-                  </Typography>
-                  
-                  {card.mana_cost && (
-                    <Typography variant="body2" gutterBottom>
-                      <strong>Mana Cost:</strong> {card.mana_cost}
-                    </Typography>
-                  )}
-                  
-                  {card.oracle_text && (
-                    <Typography variant="body2" sx={{ mt: 1 }}>
-                      <strong>Text:</strong> {card.oracle_text}
-                    </Typography>
-                  )}
-                  
-                  {(card.power || card.toughness) && (
-                    <Typography variant="body2" sx={{ mt: 1 }}>
-                      <strong>P/T:</strong> {card.power}/{card.toughness}
-                    </Typography>
-                  )}
-                  
-                  <Typography variant="caption" display="block" sx={{ mt: 2 }}>
-                    Set: {card.set_name}
-                  </Typography>
-                </CardContent>
-              </Card>
-            ))}
+            {searchResults.map((card) => {
+              const cardImage = getCardImage(card);
+              return (
+                <Card 
+                  key={card.id} 
+                  sx={{ 
+                    height: '100%', 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    transition: 'transform 0.2s ease-in-out',
+                    '&:hover': {
+                      transform: 'scale(1.05)',
+                      cursor: 'pointer',
+                    },
+                  }}
+                >
+                  <CardActionArea 
+                    onClick={() => handleCardClick(card)}
+                    sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                  >
+                    {cardImage ? (
+                      <CardMedia
+                        component="img"
+                        image={cardImage}
+                        alt={card.name}
+                        sx={{ 
+                          height: 280,
+                          objectFit: 'cover',
+                          flexGrow: 1
+                        }}
+                      />
+                    ) : (
+                      <Box
+                        sx={{
+                          height: 280,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          bgcolor: 'grey.200',
+                          flexGrow: 1
+                        }}
+                      >
+                        <Typography color="text.secondary" variant="body2">
+                          No image
+                        </Typography>
+                      </Box>
+                    )}
+                    <CardContent sx={{ p: 1, flexShrink: 0 }}>
+                      <Typography 
+                        variant="body2" 
+                        component="h3" 
+                        sx={{ 
+                          fontWeight: 'bold',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        {card.name}
+                      </Typography>
+                      <Typography 
+                        variant="caption" 
+                        color="text.secondary"
+                        sx={{
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          display: 'block'
+                        }}
+                      >
+                        {card.set_name}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              );
+            })}
           </Box>
 
           {totalPages > 1 && (
