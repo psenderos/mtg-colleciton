@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Playwright/browser testing artifacts
+/tmp/playwright-mcp-output/
