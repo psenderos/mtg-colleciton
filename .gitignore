@@ -10,6 +10,7 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
@@ -24,3 +25,6 @@ yarn-error.log*
 
 # Playwright/browser testing artifacts
 /tmp/playwright-mcp-output/
+
+# Vite
+.vite
