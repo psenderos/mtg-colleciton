@@ -15,14 +15,17 @@ vi.mock('axios', () => ({
 
 describe('ScrifallService', () => {
   let service: ScrifallService;
-  let mockAxiosInstance: any;
+  let mockAxiosInstance: {
+    get: ReturnType<typeof vi.fn>;
+    post: ReturnType<typeof vi.fn>;
+  };
 
   beforeEach(() => {
     mockAxiosInstance = {
       get: vi.fn(),
       post: vi.fn(),
     };
-    (axios.create as any).mockReturnValue(mockAxiosInstance);
+    (axios.create as ReturnType<typeof vi.fn>).mockReturnValue(mockAxiosInstance);
     service = new ScrifallService();
   });
 

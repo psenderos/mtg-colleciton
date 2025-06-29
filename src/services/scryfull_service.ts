@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { Card, CardList, RulingList, CardSearchParams, Autocomplete } from '../types/cards';
 import { Set, SetList } from '../types/sets';
-import { CardSymbol, CardSymbolList, ManaCost } from '../types/symbols';
+import { CardSymbolList, ManaCost } from '../types/symbols';
 import { Catalog } from '../types/catalog';
 import { BulkData, BulkDataList } from '../types/bulk';
 import { Error as ScryfallError } from '../types/common';
@@ -545,7 +545,7 @@ export class ScrifallService {
   /**
    * Handle API errors consistently
    */
-  private handleError(error: unknown, fallback?: any): any {
+  private handleError(error: unknown, fallback?: unknown): unknown {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 404 && fallback) {
         return fallback;
