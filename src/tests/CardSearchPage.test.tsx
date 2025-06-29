@@ -1,24 +1,19 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { configureStore } from '@reduxjs/toolkit';
 import { CardSearchPage } from '../pages/CardSearchPage';
-
-// Mock react-router-dom to avoid dependency issues
-jest.mock('react-router-dom', () => ({
-  useNavigate: () => jest.fn(),
-}));
+import searchReducer from '../store/searchSlice';
+import { vi } from 'vitest';
 
 // Mock the API service
-jest.mock('../services/api', () => ({
-  apiService: {
-    searchCards: jest.fn(),
-    getCardByMtgoId: jest.fn(),
-    getCardPrints: jest.fn(),
-    testConnection: jest.fn(),
+vi.mock('../services/scryfull_service', () => ({
+  scrifallService: {
+    searchCards: vi.fn(),
+    getCardByMtgoId: vi.fn(),
   },
-  ScryfallCard: {},
-  ScryfallSearchResponse: {},
-  ApiService: jest.fn(),
 }));
 
 const theme = createTheme({
@@ -32,12 +27,27 @@ const theme = createTheme({
   },
 });
 
+// Create a test store
+const createTestStore = () => {
+  return configureStore({
+    reducer: {
+      search: searchReducer,
+    },
+  });
+};
+
 describe('CardSearchPage', () => {
   test('renders card search page correctly', () => {
+    const store = createTestStore();
+    
     render(
-      <ThemeProvider theme={theme}>
-        <CardSearchPage />
-      </ThemeProvider>
+      <Provider store={store}>
+        <BrowserRouter>
+          <ThemeProvider theme={theme}>
+            <CardSearchPage />
+          </ThemeProvider>
+        </BrowserRouter>
+      </Provider>
     );
     
     // Test that the main components are rendered
