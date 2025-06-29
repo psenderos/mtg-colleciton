@@ -14,10 +14,31 @@ A React application for managing Magic: The Gathering card collections, featurin
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- npm or yarn
+- Node.js (v22 or higher)
+- Yarn package manager
+- Mise (recommended for dependency management)
 
 ### Installation
+
+#### Option 1: With Mise (Recommended)
+
+1. Install [Mise](https://mise.jdx.dev/getting-started.html) if you haven't already
+2. Clone the repository:
+   ```bash
+   git clone https://github.com/psenderos/mtg-colleciton.git
+   cd mtg-colleciton
+   ```
+3. Install system dependencies and project dependencies:
+   ```bash
+   mise install
+   mise run install
+   ```
+4. Start the development server:
+   ```bash
+   mise run dev
+   ```
+
+#### Option 2: Manual Installation
 
 1. Clone the repository:
    ```bash
@@ -27,12 +48,12 @@ A React application for managing Magic: The Gathering card collections, featurin
 
 2. Install dependencies:
    ```bash
-   npm install
+   yarn install
    ```
 
 3. Start the development server:
    ```bash
-   npm start
+   yarn dev
    ```
 
 4. Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
@@ -59,10 +80,24 @@ For more advanced search syntax, visit the [Scryfall Search Reference](https://s
 
 ## Available Scripts
 
-- `npm start` - Runs the app in development mode
-- `npm run build` - Builds the app for production
-- `npm test` - Launches the test runner
-- `npm run eject` - Ejects from Create React App (one-way operation)
+### With Mise (Recommended)
+
+- `mise run dev` - Runs the app in development mode with Vite
+- `mise run build` - Builds the app for production
+- `mise run test` - Runs tests with Vitest
+- `mise run test-ui` - Runs tests with Vitest UI
+- `mise run lint` - Runs ESLint
+- `mise run preview` - Preview production build
+- `mise run clean` - Clean build artifacts and dependencies
+
+### With Yarn
+
+- `yarn dev` - Runs the app in development mode with Vite
+- `yarn build` - Builds the app for production
+- `yarn test` - Runs tests with Vitest
+- `yarn test:ui` - Runs tests with Vitest UI
+- `yarn lint` - Runs ESLint
+- `yarn preview` - Preview production build
 
 ## API Integration
 
@@ -77,9 +112,13 @@ This application uses the [Scryfall API](https://scryfall.com/docs/api) to fetch
 
 - **React 19** - Frontend framework
 - **TypeScript** - Type safety and developer experience
+- **Vite** - Modern build tool and development server
 - **Material-UI (MUI)** - Component library and design system
 - **Axios** - HTTP client for API requests
-- **Jest & Testing Library** - Testing framework
+- **Vitest** - Fast unit testing framework
+- **ESLint** - Code linting and quality
+- **Yarn** - Package manager
+- **Mise** - System dependency management
 
 ## Project Structure
 

@@ -1,0 +1,39 @@
+[tools]
+node = "22"
+yarn = "1.22.22"
+
+[env]
+# Environment variables for the project
+REACT_APP_SCRYFALL_API_URL = "https://api.scryfall.com"
+
+[tasks.install]
+run = "yarn install"
+description = "Install dependencies"
+
+[tasks.dev]
+run = "yarn dev"
+description = "Start development server with Vite"
+
+[tasks.build]
+run = "yarn build"
+description = "Build for production with Vite"
+
+[tasks.test]
+run = "yarn test --run"
+description = "Run tests with Vitest"
+
+[tasks.test-ui]
+run = "yarn test:ui"
+description = "Run tests with Vitest UI"
+
+[tasks.lint]
+run = "yarn lint"
+description = "Run ESLint"
+
+[tasks.preview]
+run = "yarn preview"
+description = "Preview production build"
+
+[tasks.clean]
+run = "rm -rf dist node_modules yarn.lock"
+description = "Clean build artifacts and dependencies"
