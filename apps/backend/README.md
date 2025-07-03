@@ -1,6 +1,35 @@
 # MTG Collection Backend API
 
-This is the Go backend for the MTG Collection Manager application.
+This is the Go backend for the MTG Collection Manager application built with a layered architecture.
+
+## Architecture
+
+The backend follows a clean layered architecture with proper separation of concerns:
+
+```
+internal/
+├── controllers/        # HTTP request handlers
+│   └── version_controller.go
+├── services/          # Business logic layer
+│   └── version_service.go  
+├── repositories/      # Data access layer
+│   └── version_repository.go
+├── models/           # Data structures
+│   └── version.go
+├── config/           # Configuration and database setup
+│   └── database.go
+└── middleware/       # HTTP middleware
+    └── cors.go
+```
+
+### Layers
+
+- **Controllers**: Handle HTTP requests and responses, input validation
+- **Services**: Contain business logic and orchestrate repository calls  
+- **Repositories**: Handle database operations and data access
+- **Models**: Define data structures and API responses
+- **Config**: Database configuration and initialization
+- **Middleware**: HTTP middleware like CORS, authentication, etc.
 
 ## Features
 
@@ -8,6 +37,7 @@ This is the Go backend for the MTG Collection Manager application.
 - PostgreSQL database with GORM ORM
 - Version management with unique active constraint
 - CORS enabled for frontend integration
+- Clean layered architecture
 
 ## API Endpoints
 
