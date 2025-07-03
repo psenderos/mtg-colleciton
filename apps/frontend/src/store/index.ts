@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import searchReducer from './searchSlice';
+import versionReducer from './versionSlice';
 
 export const store = configureStore({
   reducer: {
     search: searchReducer,
+    version: versionReducer,
   },
 });
 

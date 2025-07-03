@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   AppBar,
@@ -13,13 +13,15 @@ import {
   ListItemButton,
   Box,
   CssBaseline,
+  Chip,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
   Search as SearchIcon,
 } from '@mui/icons-material';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { clearSearch } from '../store/searchSlice';
+import { fetchVersion } from '../store/versionSlice';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -44,8 +46,14 @@ const navigationItems: NavigationItem[] = [
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { version, loading } = useAppSelector((state) => state.version);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedPath, setSelectedPath] = useState('/');
+
+  // Fetch version on component mount
+  useEffect(() => {
+    dispatch(fetchVersion());
+  }, [dispatch]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -104,9 +112,27 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             MTG Collection Manager
           </Typography>
+          {/* Version display on the right */}
+          {version && (
+            <Chip
+              label={`v${version}`}
+              variant="outlined"
+              size="small"
+              sx={{
+                color: 'white',
+                borderColor: 'rgba(255, 255, 255, 0.5)',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              }}
+            />
+          )}
+          {loading && (
+            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+              Loading...
+            </Typography>
+          )}
         </Toolbar>
       </AppBar>
       

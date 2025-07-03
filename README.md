@@ -1,20 +1,39 @@
 # MTG Collection Manager
 
-A React application for managing Magic: The Gathering card collections, featuring integration with the Scryfall API for card search and discovery.
+A modern full-stack application for managing Magic: The Gathering card collections, built with NX monorepo architecture.
+
+## Architecture
+
+This is an NX workspace containing:
+
+- **Frontend App** (`apps/frontend`) - React application with TypeScript, Redux, and Material-UI
+- **Backend App** (`apps/backend`) - Go REST API with Gin, GORM, and PostgreSQL
 
 ## Features
 
+### Frontend
 - 🔍 **Card Search**: Search for Magic cards using the Scryfall API
 - 📱 **Responsive Design**: Mobile-friendly interface with Material-UI components
 - 🎨 **Modern UI**: Clean interface with top navigation bar and drawer menu
 - 📄 **Pagination**: Navigate through large search results efficiently
 - ⚡ **Fast Performance**: Built with React and TypeScript for optimal performance
+- 🏪 **Redux State Management**: Persistent search state across navigation
+- 🏷️ **Version Display**: Shows current application version from backend API
+
+### Backend
+- 🚀 **Go REST API**: High-performance server with Gin framework
+- 🗃️ **PostgreSQL Database**: Robust data storage with GORM ORM
+- 📈 **Version Management**: API endpoint for application version
+- 🔒 **Database Constraints**: Ensures data integrity (only one active version)
+- 🌐 **CORS Enabled**: Ready for frontend integration
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js (v22 or higher)
+- Go (latest version)
+- PostgreSQL database
 - Yarn package manager
 - Mise (recommended for dependency management)
 
